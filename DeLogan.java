@@ -57,15 +57,10 @@ public class DeLogan {
         }
 
         File logan = null;
-        boolean test = false;
         switch (fun){
             case "help":
-                System.out.println("java DeLogan [test][help] inputFileAbsolutePath [verbose|greedy]");
+                System.out.println("java DeLogan [help] encryptFileOrDirPath [verbose|greedy]");
                 return;
-            case "test":
-                test = true;
-                logan = new File(args[1]);
-                break;
             default:
                 logan = new File(args[0]);
         }
@@ -81,21 +76,21 @@ public class DeLogan {
                     System.out.println("ignore: " + file.getName());
                     continue;
                 }
-                parseFile(file, test);
+                parseFile(file);
             }
         }else if (logan.isFile()){
-            parseFile(logan, test);
+            parseFile(logan);
         }
 
 
     }
 
-    private static void parseFile(File input, boolean test){
+    private static void parseFile(File input){
         try {
             File output = new File(input.getAbsolutePath() + "_output");
             System.out.println("parsing: " + input.getAbsolutePath() + " to " + output.getAbsolutePath());
             FileInputStream fileInputStream = new FileInputStream(input);
-            DeLogan loganProtocol = new DeLogan(fileInputStream, output, test);
+            DeLogan loganProtocol = new DeLogan(fileInputStream, output);
             loganProtocol.process();
             loganProtocol.closeFileSteam();
 
@@ -104,12 +99,7 @@ public class DeLogan {
         }
     }
 
-    public DeLogan(InputStream stream, File file, boolean test) {
-        if(test){
-            key = "0123456789012345";
-            iv = "0123456789012345";
-        }
-
+    public DeLogan(InputStream stream, File file) {
         try {
             int ch = 0;
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
